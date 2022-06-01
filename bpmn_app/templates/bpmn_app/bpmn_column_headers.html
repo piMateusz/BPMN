@@ -6,7 +6,14 @@
 {% endblock header %}
 
 {% block main %}
-    <p>Dropdown 1</p>
-    <p>Dropdown 2</p>
-    <p>Dropdown 3</p>
+    <form method="POST" class="form-group border border-secondary rounded p-4 mx-auto my-5">
+        {% csrf_token %}
+        {% load crispy_forms_filters %}
+        <div class="mb-3">
+{#            <label for="file" class="form-label">Upload an events logs file: </label>#}
+            {{ form | crispy }}
+        </div>
+
+        <input class="btn btn-primary mr-4" type="submit" value="Upload">
+    </form>
 {% endblock main %}
