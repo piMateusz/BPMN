@@ -1,0 +1,15 @@
+{% extends "bpmn_app/base.html" %}
+
+{% block header %}
+    <p> Here we will list all loaded bpmn models or message that no bpmn model is added</p>
+{% endblock header %}
+
+{% block main %}
+    {% for bpmn_file in bpmn_files %}
+        <a href="{% url 'bpmn-model-detail' bpmn_file.id %}">{{ bpmn_file.file.name }}</a>
+        <br>
+    {% empty %}
+        <p>You haven't added any bpmn models yet</p>
+        <input type="button" value="Add bpmn model">
+    {% endfor %}
+{% endblock main %}

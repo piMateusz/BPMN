@@ -1,0 +1,62 @@
+{% extends "bpmn_app/base.html" %}
+{% load static %}
+
+{% block header %}
+    <p>Here should be detailed info about model</p>
+{% endblock header %}
+
+{% block main %}
+    <p>Filter nodes or/and edges:</p>
+
+    <div>
+        <label for="nodes">Filter nodes</label>
+        <input type="range" class="slider" id="nodes" name="nodes" min="0" max="{{ color_max }}" value="0" step="1">
+        <p id="nodeSliderValue">0</p>
+    </div>
+
+    <div>
+        <label for="edges">Filter edges</label>
+        <input type="range" class="slider" id="edges" name="edges" min="0" max="{{ trace_max }}" value="0" step="1">
+        <p id="edgeSliderValue">0</p>
+    </div>
+
+    <script>
+    const nodeSlider = document.querySelector('#nodes');
+    const edgeSlider = document.querySelector('#edges');
+
+    // function that changes graph after slider value changed
+    function draw_graph() {
+        const nodeSliderVal = nodeSlider.value
+        const edgeSliderVal = edgeSlider.value
+
+        $.ajax({
+            type: "POST",
+            url: '{% url 'ajax-test-view' %}',
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                file_name: '{{ file_name }}',
+                node_threshold: nodeSliderVal,
+                edge_threshold: edgeSliderVal
+                },
+            success:  function(response){
+                const image = document.querySelector('#bpmnImg');
+                const nodeSliderVal = nodeSlider.value
+                const edgeSliderVal = edgeSlider.value
+
+                const node_slider_val = document.querySelector('#nodeSliderValue')
+                const edge_slider_val = document.querySelector('#edgeSliderValue')
+                image.src = response;
+                node_slider_val.innerHTML = nodeSliderVal;
+                edge_slider_val.innerHTML = edgeSliderVal;
+               }
+        });
+    }
+
+    nodeSlider.addEventListener('change', draw_graph, false);
+    edgeSlider.addEventListener('change', draw_graph, false);
+
+    </script>
+    <div>
+        <img src="{{ img_src }}" alt="Bpmn model" id="bpmnImg">
+    </div>
+{% endblock main %}
