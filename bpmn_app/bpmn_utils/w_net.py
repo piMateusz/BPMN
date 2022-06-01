@@ -5,6 +5,17 @@ import pm4py
 import pandas as pd
 
 
+def load_df_columns_from_file(file_path):
+    if file_path.endswith(".csv"):
+        df = pd.read_csv(file_path)
+
+    else:
+        log = pm4py.read_xes(file_path)
+        df = pm4py.convert_to_dataframe(log)
+
+    return df.columns
+
+
 def load_from_file(file_path, case_id_col_name: str = "Case ID", timestamp_col_name: str = "Start Timestamp",
                    activity_col_name: str = "Activity"):
     if file_path.endswith(".csv"):

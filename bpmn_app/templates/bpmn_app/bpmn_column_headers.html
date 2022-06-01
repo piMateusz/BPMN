@@ -8,12 +8,47 @@
 {% block main %}
     <form method="POST" class="form-group border border-secondary rounded p-4 mx-auto my-5">
         {% csrf_token %}
-        {% load crispy_forms_filters %}
-        <div class="mb-3">
-{#            <label for="file" class="form-label">Upload an events logs file: </label>#}
-            {{ form | crispy }}
-        </div>
+        <label for="caseID">Select Case ID column</label>
+        <select id="caseID" name="caseID">
+
+        {% for df_column in df_columns %}
+            {% if case_id_df_val == df_column %}
+                <option selected="selected">{{ df_column }}</option>
+            {% else %}
+                <option value="{{ df_column }}">{{ df_column }}</option>
+            {% endif %}
+        {% endfor %}
+        </select>
+
+        <p> Probability: {{ case_id_max_prob }} %</p>
+
+        <label for="timestamp">Select Start Timestamp column</label>
+        <select id="timestamp" name="timestamp">
+        {% for df_column in df_columns %}
+            {% if timestamp_df_val == df_column %}
+                <option selected="selected">{{ df_column }}</option>
+            {% else %}
+                <option value="{{ df_column }}">{{ df_column }}</option>
+            {% endif %}
+        {% endfor %}
+        </select>
+
+        <p> Probability: {{ timestamp_max_prob }} %</p>
+
+        <label for="activity">Select Activity column</label>
+        <select id="activity" name="activity">
+        {% for df_column in df_columns %}
+            {% if activity_df_val == df_column %}
+                <option selected="selected">{{ df_column }}</option>
+            {% else %}
+                <option value="{{ df_column }}">{{ df_column }}</option>
+            {% endif %}
+        {% endfor %}
+        </select>
+
+        <p> Probability: {{ activity_max_prob }} %</p>
 
         <input class="btn btn-primary mr-4" type="submit" value="Upload">
     </form>
+
 {% endblock main %}

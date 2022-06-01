@@ -12,7 +12,7 @@ class ModelFormWithFileField(forms.ModelForm):
         fields = ['file']
 
 
-class ModelCsvHeaderForm(forms.ModelForm):
-    class Meta:
-        model = BpmnFile
-        fields = ['first_header_dropdown', 'second_header_dropdown', 'third_header_dropdown']
+# class ModelCsvHeaderForm(forms.ModelForm):
+#     class Meta:
+#         model = BpmnFile
+#         fields = ['first_header_dropdown', 'second_header_dropdown', 'third_header_dropdown']

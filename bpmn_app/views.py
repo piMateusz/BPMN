@@ -4,11 +4,13 @@ from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.urls import reverse
 
-from .forms import ModelFormWithFileField, ModelCsvHeaderForm
+from .forms import ModelFormWithFileField
 from .models import BpmnFile
 from .bpmn_utils.graph import display_bpmn_model
+from .bpmn_utils.w_net import load_df_columns_from_file
 
 import os
+from difflib import SequenceMatcher
 
 # Create your views here.
 
@@ -51,8 +53,6 @@ def upload_file(request):
         form = ModelFormWithFileField(request.POST, request.FILES)
         if form.is_valid():
             uploaded_file = form.save()
-            # TODO correct this redirect
-            # HttpResponseRedirect(reverse(contact_details, args=(new_contact.pk,)))
             return HttpResponseRedirect(reverse('bpmn-model-column-headers', kwargs={'pk': uploaded_file.pk}))
     else:
         form = ModelFormWithFileField()
@@ -66,27 +66,43 @@ def choose_excel_column_headers(request, pk):
         raise Http404("Bpmn model does not exist")
 
     file_path = model_file.file.path
-    file_name = model_file.file.name
 
-    # TODO match strings
+    df_columns = load_df_columns_from_file(file_path)
+
     case_id_col_name = "Case ID"
     timestamp_col_name = "Start Timestamp"
     activity_col_name = "Activity"
 
+    case_id_matching_probabilities = [SequenceMatcher(None, case_id_col_name, df_column).ratio() for df_column in df_columns]
+    timestamp_matching_probabilities = [SequenceMatcher(None, timestamp_col_name, df_column).ratio() for df_column in df_columns]
+    activity_matching_probabilities = [SequenceMatcher(None, activity_col_name, df_column).ratio() for df_column in df_columns]
+
+    case_id_max_prob = max(case_id_matching_probabilities)
+    case_id_df_idx = case_id_matching_probabilities.index(case_id_max_prob)
+    case_id_df_val = df_columns[case_id_df_idx]
+
+    timestamp_max_prob = max(timestamp_matching_probabilities)
+    timestamp_df_idx = timestamp_matching_probabilities.index(timestamp_max_prob)
+    timestamp_df_val = df_columns[timestamp_df_idx]
+
+    activity_max_prob = max(activity_matching_probabilities)
+    activity_df_idx = activity_matching_probabilities.index(activity_max_prob)
+    activity_df_val = df_columns[activity_df_idx]
+
     if request.method == 'POST':
-        form = ModelCsvHeaderForm(request.POST)
-        if form.is_valid():
-            # model_file.first_header_dropdown = request.POST["first_header_dropdown"]
-            # model_file.second_header_dropdown = request.POST["second_header_dropdown"]
-            # model_file.third_header_dropdown = request.POST["third_header_dropdown"]
-            form.save()
-            # TODO change this redirect
-            return redirect('bpmn-model-home')
-    else:
-        form = ModelCsvHeaderForm()
-    return render(request, 'bpmn_app/bpmn_column_headers.html', {'form': form, 'case_id': case_id_col_name,
-                                                                 'timestamp': timestamp_col_name,
-                                                                 'activity': activity_col_name})
+        model_file.caseID = request.POST["caseID"]
+        model_file.timestamp = request.POST["timestamp"]
+        model_file.activity = request.POST["activity"]
+        model_file.save()
+        return redirect('bpmn-model-home')
+
+    return render(request, 'bpmn_app/bpmn_column_headers.html', {'df_columns': df_columns,
+                                                                 'case_id_df_val': case_id_df_val,
+                                                                 'timestamp_df_val': timestamp_df_val,
+                                                                 'activity_df_val': activity_df_val,
+                                                                 'case_id_max_prob': round(case_id_max_prob*100, 2),
+                                                                 'timestamp_max_prob': round(timestamp_max_prob*100, 2),
+                                                                 'activity_max_prob': round(activity_max_prob*100, 2)})
 
 
 
