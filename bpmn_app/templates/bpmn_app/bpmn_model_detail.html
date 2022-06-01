@@ -36,7 +36,10 @@
                 csrfmiddlewaretoken: '{{ csrf_token }}',
                 file_name: '{{ file_name }}',
                 node_threshold: nodeSliderVal,
-                edge_threshold: edgeSliderVal
+                edge_threshold: edgeSliderVal,
+                case_id_col_name: '{{ case_id_col_name }}',
+                timestamp_col_name: '{{ timestamp_col_name }}',
+                activity_col_name: '{{ activity_col_name }}'
                 },
             success:  function(response){
                 const image = document.querySelector('#bpmnImg');

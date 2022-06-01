@@ -8,27 +8,18 @@ import pandas as pd
 def load_df_columns_from_file(file_path):
     if file_path.endswith(".csv"):
         df = pd.read_csv(file_path)
-
-    else:
-        log = pm4py.read_xes(file_path)
-        df = pm4py.convert_to_dataframe(log)
-
-    return df.columns
-
-
-def load_from_file(file_path, case_id_col_name: str = "Case ID", timestamp_col_name: str = "Start Timestamp",
-                   activity_col_name: str = "Activity"):
-    if file_path.endswith(".csv"):
-        df = pd.read_csv(file_path)
-        df = df.rename(columns={case_id_col_name: "Case ID", timestamp_col_name: "Start Timestamp", activity_col_name: "Activity"})
-
-    # elif file_path.endswith(".xes"):
     # since we accept only files with .xes and .csv extensions, we can use else here
     else:
         log = pm4py.read_xes(file_path)
         df = pm4py.convert_to_dataframe(log)
-        df = df.rename(columns={"case:concept:name": "Case ID", "time:timestamp": "Start Timestamp"})
-        df = df[["Case ID", "Activity", "Start Timestamp"]]
+
+    return df
+
+
+def load_from_file(file_path: str, case_id_col_name: str, timestamp_col_name: str, activity_col_name: str):
+    df = load_df_columns_from_file(file_path)
+    df = df.rename(columns={case_id_col_name: "Case ID", timestamp_col_name: "Start Timestamp", activity_col_name: "Activity"})
+    df = df[["Case ID", "Activity", "Start Timestamp"]]
 
     return df
 
@@ -72,8 +63,8 @@ def create_w_net(dfs):
     return w_net, ev_start_set, ev_end_set
 
 
-def create_w_net_from_file(file_name):
-    df = load_from_file(file_name)
+def create_w_net_from_file(file_name, case_id_col_name, timestamp_col_name, activity_col_name):
+    df = load_from_file(file_name, case_id_col_name, timestamp_col_name, activity_col_name)
     ev_counter = get_ev_counter_from_df(df)
     traces_df = get_traces_from_df(df)
     w_net, ev_start_set, ev_end_set = create_w_net(traces_df)

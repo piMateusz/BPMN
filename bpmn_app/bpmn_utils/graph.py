@@ -150,10 +150,12 @@ def create_graph(start_set_events, end_set_events, causalities, inv_causalities,
     return img_rel_path
 
 
-def display_bpmn_model(file_path, node_threshold, edge_threshold):
+def display_bpmn_model(file_path, case_id_col_name, timestamp_col_name,
+                       activity_col_name, node_threshold, edge_threshold):
     # create bpmn_utils from file
     ev_counter, trace_max, color_min, color_max, start_node_name, end_node_name, \
-    w_net, start_set_events, end_set_events = create_w_net_from_file(file_path)
+    w_net, start_set_events, end_set_events = create_w_net_from_file(file_path, case_id_col_name, timestamp_col_name,
+                                                                     activity_col_name)
 
     sorted_w_net = sort_graph_dict(w_net, ev_counter)
     basic_graph_dict = copy.deepcopy(sorted_w_net)

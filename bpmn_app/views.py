@@ -19,9 +19,14 @@ def myajaxtestview(request):
     node_threshold = int(request.POST['node_threshold'])
     edge_threshold = int(request.POST['edge_threshold'])
     file_name = request.POST['file_name']
+    case_id_col_name = request.POST['case_id_col_name']
+    timestamp_col_name = request.POST['timestamp_col_name']
+    activity_col_name = request.POST['activity_col_name']
+
     file_path = os.path.join(settings.MEDIA_ROOT, file_name)
 
-    img_src, trace_max, color_max = display_bpmn_model(file_path, node_threshold, edge_threshold)
+    img_src, trace_max, color_max = display_bpmn_model(file_path, case_id_col_name, timestamp_col_name,
+                                                       activity_col_name, node_threshold, edge_threshold)
 
     return HttpResponse(img_src)
 
@@ -35,11 +40,19 @@ def bpmn_model_detail_view(request, pk):
     file_path = model_file.file.path
     file_name = model_file.file.name
 
-    img_src, trace_max, color_max = display_bpmn_model(file_path, node_threshold=0, edge_threshold=0)
+    case_id_col_name = model_file.caseID
+    timestamp_col_name = model_file.timestamp
+    activity_col_name = model_file.activity
+
+    img_src, trace_max, color_max = display_bpmn_model(file_path, case_id_col_name, timestamp_col_name,
+                                                       activity_col_name, node_threshold=0, edge_threshold=0)
 
     return render(request, 'bpmn_app/bpmn_model_detail.html',
                   {'file_name': file_name, 'img_src': img_src,
-                   'trace_max': trace_max + 1, 'color_max': color_max + 1})
+                   'trace_max': trace_max + 1, 'color_max': color_max + 1,
+                   'case_id_col_name': case_id_col_name, 'timestamp_col_name': timestamp_col_name,
+                   'activity_col_name': activity_col_name
+                   })
 
 
 class BpmnModelListView(ListView):
@@ -67,7 +80,8 @@ def choose_excel_column_headers(request, pk):
 
     file_path = model_file.file.path
 
-    df_columns = load_df_columns_from_file(file_path)
+    df = load_df_columns_from_file(file_path)
+    df_columns = df.columns
 
     case_id_col_name = "Case ID"
     timestamp_col_name = "Start Timestamp"
