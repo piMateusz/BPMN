@@ -5,7 +5,7 @@ import pm4py
 import pandas as pd
 
 
-def load_df_columns_from_file(file_path):
+def load_df_from_file(file_path):
     if file_path.endswith(".csv"):
         df = pd.read_csv(file_path)
     # since we accept only files with .xes and .csv extensions, we can use else here
@@ -17,7 +17,7 @@ def load_df_columns_from_file(file_path):
 
 
 def load_from_file(file_path: str, case_id_col_name: str, timestamp_col_name: str, activity_col_name: str):
-    df = load_df_columns_from_file(file_path)
+    df = load_df_from_file(file_path)
     df = df.rename(columns={case_id_col_name: "Case ID", timestamp_col_name: "Start Timestamp", activity_col_name: "Activity"})
     df = df[["Case ID", "Activity", "Start Timestamp"]]
 

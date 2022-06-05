@@ -1,15 +1,27 @@
 {% extends "bpmn_app/base.html" %}
 
 {% block header %}
-    <p> Here we will list all loaded bpmn models or message that no bpmn model is added</p>
 {% endblock header %}
 
 {% block main %}
     {% for bpmn_file in bpmn_files %}
-        <a href="{% url 'bpmn-model-detail' bpmn_file.id %}">{{ bpmn_file.file.name }}</a>
-        <br>
+        <div class="container my-2 border border-dark rounded">
+            <div class="row my-2 text-center">
+                <div class="col-md my-auto">
+                    <div>{{ bpmn_file.file.name }}</div>
+                </div>
+                <div class="col-md">
+                    <a class="btn btn-primary" href="{% url 'bpmn-model-detail' bpmn_file.id %}" role="button">Filtrate</a>
+                </div>
+                <div class="col-md">
+                    <a class="btn btn-primary" href="{% url 'events-log-detail' bpmn_file.id %}" role="button">Events log</a>
+                </div>
+            </div>
+        </div>
     {% empty %}
-        <p>You haven't added any bpmn models yet</p>
-        <input type="button" value="Add bpmn model">
+        <div class="container my-4">
+            <p>You haven't added any bpmn models yet</p>
+            <a class="btn btn-primary" href="{% url 'bpmn-model-upload' %}" role="button">Add bpmn model</a>
+        </div>
     {% endfor %}
 {% endblock main %}

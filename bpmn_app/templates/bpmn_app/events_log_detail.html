@@ -1,10 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "bpmn_app/base.html" %}
+{% load static %}
 
-</body>
-</html>
+{% block header %}
+{% endblock header %}
+
+{% block main %}
+    <div class="container my-2">
+        <button class="btn btn-primary my-2" onclick="showHideTable('df')">Show/hide events log</button>
+        {{ df | safe}}
+    </div>
+
+    <div class="container my-2">
+        <button class="btn btn-primary my-2" onclick="showHideTable('ev_counter')">Show/hide activity count</button>
+        {{ ev_counter | safe }}
+    </div>
+
+    <div class="container my-2">
+        <button class="btn btn-primary my-2" onclick="showHideTable('traces')">Show/hide traces</button>
+        {{ traces | safe }}
+    </div>
+
+    <div class="container my-2">
+        <button class="btn btn-primary my-2" onclick="showHideTable('df_describe')">Show/hide statistics</button>
+        {{ df_describe | safe }}
+    </div>
+
+    <script>
+    function showHideTable(table_id) {
+        const table = document.getElementById(table_id);
+        if (table.style.display === "none") {
+            table.style.display = "table";
+        }
+        else {
+        table.style.display = "none";
+        }
+    }
+    </script>
+{% endblock main %}

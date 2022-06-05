@@ -2,22 +2,21 @@
 {% load static %}
 
 {% block header %}
-    <p>Here should be detailed info about model</p>
 {% endblock header %}
 
 {% block main %}
-    <p>Filter nodes or/and edges:</p>
+    <div class="mt-5 mb-2">Filter nodes or/and edges:</div>
 
     <div>
         <label for="nodes">Filter nodes</label>
-        <input type="range" class="slider" id="nodes" name="nodes" min="0" max="{{ color_max }}" value="0" step="1">
-        <p id="nodeSliderValue">0</p>
+        <input type="range" style="display: inline;" class="slider" id="nodes" name="nodes" min="0" max="{{ color_max }}" value="0" step="1">
+        <div id="nodeSliderValue" style="display: inline;">0</div>
     </div>
 
     <div>
         <label for="edges">Filter edges</label>
-        <input type="range" class="slider" id="edges" name="edges" min="0" max="{{ trace_max }}" value="0" step="1">
-        <p id="edgeSliderValue">0</p>
+        <input type="range" style="display: inline;" class="slider" id="edges" name="edges" min="0" max="{{ trace_max }}" value="0" step="1">
+        <div id="edgeSliderValue" style="display: inline;">0</div>
     </div>
 
     <script>

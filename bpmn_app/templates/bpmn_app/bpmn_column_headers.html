@@ -2,53 +2,58 @@
 {% load static %}
 
 {% block header %}
-    <p>Here should be dropdown for automatically selecting excel headers</p>
 {% endblock header %}
 
 {% block main %}
     <form method="POST" class="form-group border border-secondary rounded p-4 mx-auto my-5">
         {% csrf_token %}
-        <label for="caseID">Select Case ID column</label>
-        <select id="caseID" name="caseID">
 
-        {% for df_column in df_columns %}
-            {% if case_id_df_val == df_column %}
-                <option selected="selected">{{ df_column }}</option>
-            {% else %}
-                <option value="{{ df_column }}">{{ df_column }}</option>
-            {% endif %}
-        {% endfor %}
-        </select>
+        <div class="container mb-4">
+            <label for="caseID" class="my-2">Select Case ID column:</label>
+            <select class="form-select" id="caseID" name="caseID">
 
-        <p> Probability: {{ case_id_max_prob }} %</p>
+            {% for df_column in df_columns %}
+                {% if case_id_df_val == df_column %}
+                    <option selected="selected">{{ df_column }}</option>
+                {% else %}
+                    <option value="{{ df_column }}">{{ df_column }}</option>
+                {% endif %}
+            {% endfor %}
+            </select>
+            <div class="my-2"> Automatically selected column for Case ID: {{ case_id_df_val }}. Match probability: {{ case_id_max_prob }} %</div>
+        </div>
 
-        <label for="timestamp">Select Start Timestamp column</label>
-        <select id="timestamp" name="timestamp">
-        {% for df_column in df_columns %}
-            {% if timestamp_df_val == df_column %}
-                <option selected="selected">{{ df_column }}</option>
-            {% else %}
-                <option value="{{ df_column }}">{{ df_column }}</option>
-            {% endif %}
-        {% endfor %}
-        </select>
+        <div class="container my-4">
+            <label for="timestamp" class="my-2">Select Start Timestamp column:</label>
+            <select class="form-select" id="timestamp" name="timestamp">
+            {% for df_column in df_columns %}
+                {% if timestamp_df_val == df_column %}
+                    <option selected="selected">{{ df_column }}</option>
+                {% else %}
+                    <option value="{{ df_column }}">{{ df_column }}</option>
+                {% endif %}
+            {% endfor %}
+            </select>
+            <div class="my-2"> Automatically selected column for Start Timestamp: {{ timestamp_df_val }}. Match probability: {{ timestamp_max_prob }} %</div>
+        </div>
 
-        <p> Probability: {{ timestamp_max_prob }} %</p>
+        <div class="container my-4">
+            <label for="activity" class="my-2">Select Activity column:</label>
+            <select class="form-select" id="activity" name="activity">
+            {% for df_column in df_columns %}
+                {% if activity_df_val == df_column %}
+                    <option selected="selected">{{ df_column }}</option>
+                {% else %}
+                    <option value="{{ df_column }}">{{ df_column }}</option>
+                {% endif %}
+            {% endfor %}
+            </select>
+            <div class="my-2"> Automatically selected column for Activity: {{ activity_df_val }}. Match probability: {{ activity_max_prob }} %</div>
+        </div>
 
-        <label for="activity">Select Activity column</label>
-        <select id="activity" name="activity">
-        {% for df_column in df_columns %}
-            {% if activity_df_val == df_column %}
-                <option selected="selected">{{ df_column }}</option>
-            {% else %}
-                <option value="{{ df_column }}">{{ df_column }}</option>
-            {% endif %}
-        {% endfor %}
-        </select>
-
-        <p> Probability: {{ activity_max_prob }} %</p>
-
-        <input class="btn btn-primary mr-4" type="submit" value="Upload">
+        <div class="container">
+            <input class="btn btn-primary mr-4" type="submit" value="Upload">
+        </div>
     </form>
 
 {% endblock main %}
