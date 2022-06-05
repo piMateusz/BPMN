@@ -9,7 +9,7 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
+    <link rel="stylesheet" type="text/css" href="{% static 'bpmn_app/bpmn_model.css' %}">
     <title>Bpmn model</title>
   </head>
 
@@ -22,9 +22,11 @@
     </nav>
 
     <header>
-       {% block header %}
+        <div class="mx-auto container my-2" style="text-align: center">
+        {% block header %}
 
-       {% endblock header %}
+        {% endblock header %}
+        </div>
     </header>
 
     <main>

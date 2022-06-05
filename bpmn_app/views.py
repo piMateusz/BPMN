@@ -3,6 +3,7 @@ from django.views.generic import ListView
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.urls import reverse
+from django.contrib import messages
 
 from .forms import ModelFormWithFileField
 from .models import BpmnFile
@@ -67,6 +68,8 @@ def upload_file(request):
         if form.is_valid():
             uploaded_file = form.save()
             return HttpResponseRedirect(reverse('bpmn-model-column-headers', kwargs={'pk': uploaded_file.pk}))
+        else:
+            messages.error(request, 'Wrong file format! Supported extensions are: .csv .xes')
     else:
         form = ModelFormWithFileField()
     return render(request, 'bpmn_app/bpmn_upload.html', {'form': form})
@@ -147,6 +150,7 @@ def choose_excel_column_headers(request, pk):
         model_file.timestamp = request.POST["timestamp"]
         model_file.activity = request.POST["activity"]
         model_file.save()
+        messages.success(request, 'Successfully saved BPMN model.')
         return redirect('bpmn-model-home')
 
     return render(request, 'bpmn_app/bpmn_column_headers.html', {'df_columns': df_columns,

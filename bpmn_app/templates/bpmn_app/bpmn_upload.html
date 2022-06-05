@@ -1,6 +1,14 @@
 {% extends 'bpmn_app/base.html' %}
 {% load static %}
 
+{% block header %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-danger" role="alert">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
 {% block main %}
     <form method="POST" enctype="multipart/form-data" class="form-group border border-secondary rounded p-4 mx-auto my-5">
         {% csrf_token %}

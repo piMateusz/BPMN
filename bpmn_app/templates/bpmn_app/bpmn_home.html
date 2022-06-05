@@ -1,6 +1,11 @@
 {% extends "bpmn_app/base.html" %}
 
 {% block header %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} form-message">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
 {% endblock header %}
 
 {% block main %}
